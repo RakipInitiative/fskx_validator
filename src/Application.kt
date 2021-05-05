@@ -11,7 +11,7 @@ import io.ktor.jackson.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
-fun Application.module() {
+fun Application.module(testing: Boolean = false) {
 
     install(FreeMarker) {
         templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
