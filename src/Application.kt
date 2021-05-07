@@ -72,8 +72,8 @@ fun Application.module(testing: Boolean = false) {
             }
 
             if (file != null) {
-                // TODO: validate file
-                call.respond(HttpStatusCode.OK)
+                val validationResult = validate(file!!)
+                call.respond(validationResult)
             }
             println("TODO: /validate")
         }
@@ -81,6 +81,17 @@ fun Application.module(testing: Boolean = false) {
         static("/static") {
             resources("files")
         }
+    }
+}
+
+fun validate(file: File): ValidationResult {
+
+    val combineArchiveCheck = CombineArchiveChecker().check(file)
+
+    return if (combineArchiveCheck.error.isEmpty()) {
+        ValidationResult(true, listOf(combineArchiveCheck))
+    } else {
+        ValidationResult(false, listOf(combineArchiveCheck))
     }
 }
 
