@@ -55,7 +55,7 @@ fun Application.module(testing: Boolean = false) {
             var file: File? = null
             multipartData.forEachPart { part ->
                 // if part is a file (could be form item)
-                if(part is PartData.FileItem) {
+                if (part is PartData.FileItem) {
                     // retrieve file name of upload
                     val name = part.originalFileName!!
 
@@ -87,11 +87,11 @@ fun Application.module(testing: Boolean = false) {
 fun validate(file: File): ValidationResult {
 
     val combineArchiveCheck = CombineArchiveChecker().check(file)
-
-    return if (combineArchiveCheck.error.isEmpty()) {
-        ValidationResult(true, listOf(combineArchiveCheck))
+    if (combineArchiveCheck.error.isNotEmpty()) {
+        return ValidationResult(false, listOf(combineArchiveCheck))
     } else {
-        ValidationResult(false, listOf(combineArchiveCheck))
+        val structureCheck = StructureChecker().check(file)
+        return ValidationResult(structureCheck.error.isEmpty(), listOf(combineArchiveCheck, structureCheck))
     }
 }
 

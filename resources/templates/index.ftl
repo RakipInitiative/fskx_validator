@@ -38,6 +38,10 @@
                         <th scope="row">CombineArchive check</th>
                         <td id="combineArchiveCheck"></td>
                     </tr>
+                    <tr>
+                        <th scope="row">Structure check</th>
+                        <td id="structureCheck"></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -67,6 +71,19 @@
             }
             for (warning of combineArchiveResult.warnings) {
                 combineArchiveCheck.innerHTML += "<p>" + warning + "</p>";
+            }
+
+            // Update structureCheck
+            let structureResult = checks[1];
+            let structureCheck = document.getElementById("structureCheck");
+            structureCheck.innerHTML = "";
+            if (structureCheck.error) {
+                structureCheck.innerHTML += createAlert("incorrect", structureCheck.error);
+            } else {
+                structureCheck.innerHTML += createAlert("correct", "");
+            }
+            for (warning of structureResult.warnings) {
+                structureCheck.innerHTML += "<p>" + warning + "</p>";
             }
         }
 

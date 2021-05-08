@@ -4,6 +4,10 @@ import de.unirostock.sems.cbarchive.CombineArchive
 import de.unirostock.sems.cbarchive.CombineArchiveException
 import java.io.File
 
+import de.bund.bfr.fskml.FSKML
+import de.bund.bfr.fskml.FskMetaDataObject
+import de.unirostock.sems.cbarchive.ArchiveEntry
+
 data class CheckResult(val error: String, val warnings: List<String>)
 data class ValidationResult(val isValid: Boolean, val checks: List<CheckResult>)
 
@@ -20,11 +24,64 @@ class CombineArchiveChecker : Checker {
      * warnings.
      */
     override fun check(file: File): CheckResult {
+
         return try {
-            CombineArchive(file)
+            CombineArchive(file).use {  }
             CheckResult("", emptyList())
         } catch (err: CombineArchiveException) {
             CheckResult(err.message ?: "", emptyList())
         }
     }
 }
+
+class StructureChecker : Checker {
+
+    /**
+     * Checks if the passed file has the required files of a simple FSKX model.
+     */
+    override fun check(file: File): CheckResult {
+
+        val result: CheckResult
+
+        CombineArchive(file).use { archive ->
+            // metaData.json is mandatory
+            if (!archive.hasMetadata()) {
+                result = CheckResult(error = "Missing metadata", warnings = emptyList())
+            }
+
+            // model script is mandatory
+            else if (!archive.hasModelScript()) {
+                result = CheckResult(error = "Missing model script", warnings = emptyList())
+            }
+
+            // simulation settings are mandatory
+            else if (!archive.hasSimulations()) {
+                result = CheckResult(error = "Missing simulation settings", warnings = emptyList())
+            } else {
+                result = CheckResult(error = "", warnings = emptyList())
+            }
+        }
+
+        return result
+    }
+
+    private fun CombineArchive.hasMetadata(): Boolean {
+        val jsonUri = FSKML.getURIS(1, 0, 12)["json"]!!
+        return getEntriesWithFormat(jsonUri).any { entry -> entry.fileName == "metaData.json"}
+    }
+
+    private fun CombineArchive.hasModelScript(): Boolean {
+        val rUri = FSKML.getURIS(1, 0, 12)["r"]
+        return getEntriesWithFormat(rUri).filter { entry -> entry.descriptions.isNotEmpty() }
+            .any { entry ->
+                val metaDataObject = FskMetaDataObject(entry.descriptions[0])
+                metaDataObject.resourceType == FskMetaDataObject.ResourceType.modelScript
+            }
+    }
+
+    private fun CombineArchive.hasSimulations(): Boolean {
+        val sedmlUri = FSKML.getURIS(1, 0, 12)["sedml"]
+        return hasEntriesWithFormat(sedmlUri)
+    }
+}
+
