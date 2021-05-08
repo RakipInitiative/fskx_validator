@@ -14,5 +14,6 @@ jobs:
           java-version: 11
       - name: Build
         env:
+          GITHUB_NAME: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         run: ./gradlew build --info
