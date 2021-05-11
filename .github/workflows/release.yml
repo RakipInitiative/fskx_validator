@@ -17,6 +17,9 @@ jobs:
         with:
           java-version: 8
       - name: Buid WAR file
+        env:
+          GITHUB_NAME: ${{ secrets.GITHUB_ACTOR }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew war
       - name: Upload to release
         uses: JasonEtco/upload-to-release@master
