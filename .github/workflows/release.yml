@@ -23,4 +23,5 @@ jobs:
         with:
           args: build/libs/fskx_validator.war application/java-archive
         env:
+          GITHUB_NAME: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
