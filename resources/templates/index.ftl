@@ -10,6 +10,11 @@
           integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
 
     <title>FSKX Validator</title>
+
+    <script>
+        let URL = "${viewData.endpoint}";  // Backend url
+        let CONTEXT = "${viewData.context}";
+    </script>
 </head>
 <body>
     <!-- Bootstrap Bundle with Popper -->
@@ -92,7 +97,7 @@
             let data = new FormData();
             data.append('file', file);
             data.append('user', 'webapp');
-            fetch("/validate", { method: 'POST', body: data })
+            fetch(URL + "/" + CONTEXT + "/validate", { method: 'POST', body: data })
                 .then(resp => resp.json())
                 .then(data => updateResultsDiv(data.checks));
         }
