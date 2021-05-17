@@ -23,6 +23,7 @@ fun Application.module(testing: Boolean = false) {
 
     val defaultProperties = Properties()
     defaultProperties["base_url"] = "http://localhost:8080/"
+    defaultProperties["context"] = ""
     val appConfiguration = if (testing) defaultProperties else loadConfiguration()
 
     val TEMP_FOLDER = createTempDirectory("uploads")
@@ -86,7 +87,6 @@ fun Application.module(testing: Boolean = false) {
                 val validationResult = validate(file!!)
                 call.respond(validationResult)
             }
-            println("TODO: /validate")
         }
 
         static("/static") {
