@@ -47,6 +47,10 @@
                         <th scope="row">Structure check</th>
                         <td id="structureCheck"></td>
                     </tr>
+                    <tr>
+                        <th scope="row">Code check</th>
+                        <td id="codeCheck"></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -89,6 +93,19 @@
             }
             for (warning of structureResult.warnings) {
                 structureCheck.innerHTML += "<p>" + warning + "</p>";
+            }
+
+            // Update codeCheck
+            let codeResult = checks[2]
+            let codeCheck = document.getElementById("codeCheck");
+            codeCheck.innerHTML = "";
+            if (codeCheck.error) {
+                codeCheck.innerHTML += createAlert("incorrect", codeCheck.error);
+            } else {
+                codeCheck.innerHTML += createAlert("correct", "");
+            }
+            for (warning of codeCheck.warnings) {
+                codeCheck.innerHTML += "<p>" + warning + "</p>";
             }
         }
 

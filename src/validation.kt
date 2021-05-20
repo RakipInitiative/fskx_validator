@@ -26,7 +26,7 @@ class CombineArchiveChecker : Checker {
     override fun check(file: File): CheckResult {
 
         return try {
-            CombineArchive(file).use {  }
+            CombineArchive(file).use { }
             CheckResult("", emptyList())
         } catch (err: CombineArchiveException) {
             CheckResult(err.message ?: "", emptyList())
@@ -67,7 +67,7 @@ class StructureChecker : Checker {
 
     private fun CombineArchive.hasMetadata(): Boolean {
         val jsonUri = FSKML.getURIS(1, 0, 12)["json"]!!
-        return getEntriesWithFormat(jsonUri).any { entry -> entry.fileName == "metaData.json"}
+        return getEntriesWithFormat(jsonUri).any { entry -> entry.fileName == "metaData.json" }
     }
 
     private fun CombineArchive.hasModelScript(): Boolean {
@@ -85,3 +85,63 @@ class StructureChecker : Checker {
     }
 }
 
+class CodeChecker() : Checker {
+
+    companion object {
+        val blacklist = File("resources/blacklist.txt").readLines()
+    }
+
+    override fun check(file: File): CheckResult {
+
+        CombineArchive(file).use { archive ->
+
+            // Read model and visualization scripts
+            val rUri = FSKML.getURIS(1, 0, 12)["r"]
+            var modelScript = ""
+            var visualizationScript = ""
+
+            archive.getEntriesWithFormat(rUri).filter { entry -> entry.descriptions.isNotEmpty() }
+                .forEach { entry ->
+                    val metaDataObject = FskMetaDataObject(entry.descriptions[0])
+                    if (metaDataObject.resourceType == FskMetaDataObject.ResourceType.modelScript) {
+                        // Read model script
+                        modelScript = entry.loadTextEntry()
+                    } else {
+                        // Read visualization script
+                        visualizationScript = entry.loadTextEntry()
+                    }
+                }
+
+            if (modelScript.isNotEmpty()) {
+                val modelCheck = validateScript(modelScript)
+                if (modelCheck.error.isNotEmpty()) return modelCheck
+            }
+
+            if (visualizationScript.isNotEmpty()) {
+                val visualizationCheck = validateScript(visualizationScript)
+                if (visualizationCheck.error.isNotEmpty()) return visualizationCheck
+            }
+
+            return CheckResult("", emptyList())
+        }
+    }
+
+    private fun validateScript(script: String): CheckResult {
+
+        for (command: String in blacklist) {
+            if (script.contains(command))
+                return CheckResult("Command $command is not allowed", emptyList())
+        }
+        return CheckResult("", emptyList())
+    }
+}
+
+private fun ArchiveEntry.loadTextEntry(): String {
+    val tempFile = createTempFile()
+    return try {
+        extractFile(tempFile)
+        tempFile.readText()
+    } finally {
+        tempFile.delete()
+    }
+}

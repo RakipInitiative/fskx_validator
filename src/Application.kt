@@ -11,6 +11,7 @@ import io.ktor.jackson.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.server.engine.*
 import java.io.File
 import java.util.*
 import kotlin.io.path.ExperimentalPathApi
@@ -100,10 +101,18 @@ fun validate(file: File): ValidationResult {
     val combineArchiveCheck = CombineArchiveChecker().check(file)
     if (combineArchiveCheck.error.isNotEmpty()) {
         return ValidationResult(false, listOf(combineArchiveCheck))
-    } else {
-        val structureCheck = StructureChecker().check(file)
+    }
+
+    val structureCheck = StructureChecker().check(file)
+    if (structureCheck.error.isNotEmpty()) {
         return ValidationResult(structureCheck.error.isEmpty(), listOf(combineArchiveCheck, structureCheck))
     }
+
+    else {
+        val codeCheck = CodeChecker().check(file)
+        return ValidationResult(codeCheck.error.isEmpty(), listOf(combineArchiveCheck, structureCheck, codeCheck))
+    }
+
 }
 
 private fun loadConfiguration(): Properties {
