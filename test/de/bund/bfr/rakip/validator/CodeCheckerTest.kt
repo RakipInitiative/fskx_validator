@@ -1,5 +1,6 @@
-package de.bund.bfr.rakip.validator
+package de.bund.bfr.rakip.validator.de.bund.bfr.rakip.validator
 
+import de.bund.bfr.rakip.validator.CodeChecker
 import org.junit.Test
 import java.io.File
 import kotlin.test.assertTrue
