@@ -15,6 +15,7 @@ buildscript {
 
 plugins {
     id "jacoco"
+    id "io.gitlab.arturbosch.detekt" version "1.17.1"
     id "org.sonarqube" version "3.1.1"
 }
 
@@ -24,6 +25,7 @@ sonarqube {
         property "sonar.organization", "rakipinitiative"
         property "sonar.host.url", "https://sonarcloud.io"
         property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.kotlin.detekt.reportPaths", "${project.buildDir}/reports/detekt/main.xml")
         property("sonar.sources", "src")
         property("sonar.tests", "test")
     }
@@ -64,6 +66,7 @@ sourceSets {
 
 repositories {
     mavenLocal()
+    mavenCentral()
     jcenter()
     maven { url 'https://kotlin.bintray.com/ktor' }
     maven { url = uri("http://mvn.sems.uni-rostock.de/releases/") }
@@ -76,6 +79,10 @@ repositories {
             password project.findProperty("github.packages.password") ?: System.getenv("GITHUB_TOKEN")
         }
     }
+}
+
+detekt {
+    ignoreFailures = true
 }
 
 dependencies {
