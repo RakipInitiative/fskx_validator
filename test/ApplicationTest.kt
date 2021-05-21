@@ -1,4 +1,5 @@
-import de.bund.bfr.rakip.validator.module
+package de.bund.bfr.rakip.validator
+
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import org.junit.Assert.assertEquals

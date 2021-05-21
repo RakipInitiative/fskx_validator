@@ -1,4 +1,5 @@
-import de.bund.bfr.rakip.validator.CombineArchiveChecker
+package de.bund.bfr.rakip.validator
+
 import org.junit.Test
 import java.io.File
 import kotlin.test.assertTrue
