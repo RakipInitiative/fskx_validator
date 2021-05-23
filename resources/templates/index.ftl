@@ -86,8 +86,8 @@
             let structureResult = checks[1];
             let structureCheck = document.getElementById("structureCheck");
             structureCheck.innerHTML = "";
-            if (structureCheck.error) {
-                structureCheck.innerHTML += createAlert("incorrect", structureCheck.error);
+            if (structureResult.error) {
+                structureCheck.innerHTML += createAlert("incorrect", structureResult.error);
             } else {
                 structureCheck.innerHTML += createAlert("correct", "");
             }
@@ -99,12 +99,12 @@
             let codeResult = checks[2]
             let codeCheck = document.getElementById("codeCheck");
             codeCheck.innerHTML = "";
-            if (codeCheck.error) {
-                codeCheck.innerHTML += createAlert("incorrect", codeCheck.error);
+            if (codeResult.error) {
+                codeCheck.innerHTML += createAlert("incorrect", codeResult.error);
             } else {
                 codeCheck.innerHTML += createAlert("correct", "");
             }
-            for (warning of codeCheck.warnings) {
+            for (warning of codeResult.warnings) {
                 codeCheck.innerHTML += "<p>" + warning + "</p>";
             }
         }
@@ -114,7 +114,7 @@
             let data = new FormData();
             data.append('file', file);
             data.append('user', 'webapp');
-            fetch(URL + "/" + CONTEXT + "/validate", { method: 'POST', body: data })
+            fetch(URL + "/validate", { method: 'POST', body: data })
                 .then(resp => resp.json())
                 .then(data => updateResultsDiv(data.checks));
         }
