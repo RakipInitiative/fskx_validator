@@ -91,7 +91,7 @@ fun Application.module(testing: Boolean = false) {
         }
 
         static("/static") {
-            resources("files")
+            resources("static")
         }
     }
 }
