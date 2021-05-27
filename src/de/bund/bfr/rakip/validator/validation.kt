@@ -88,7 +88,9 @@ class StructureChecker : Checker {
 class CodeChecker() : Checker {
 
     companion object {
-        val blacklist = File("resources/blacklist.txt").readLines()
+
+    val blacklist = object {}.javaClass.getResource("/blacklist.txt").readText().lines().filter{it.isNotEmpty()}
+    //val blacklist = CodeChecker::class.java.getResource("/blacklist.txt").readText().trim().lines()
     }
 
     override fun check(file: File): CheckResult {
@@ -128,6 +130,8 @@ class CodeChecker() : Checker {
 
     private fun validateScript(script: String): CheckResult {
 
+
+        //val blacklist = CodeChecker::class.java.getResource("blacklist.txt").readText().lines()
         for (command: String in blacklist) {
             if (script.contains(command))
                 return CheckResult("Command $command is not allowed", emptyList())
