@@ -117,9 +117,7 @@ fun validate(file: File): ValidationResult {
 
     else {
         val codeCheck = CodeChecker().check(file)
-        //val codeCheck = CodeChecker().check(File("testresources/broken_visualization.fskx"))
-
-       return ValidationResult(codeCheck.error.isEmpty(), listOf(combineArchiveCheck, structureCheck, codeCheck))
+        return ValidationResult(codeCheck.error.isEmpty(), listOf(combineArchiveCheck, structureCheck, codeCheck))
     }
 
 }
