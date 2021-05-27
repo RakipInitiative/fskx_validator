@@ -88,7 +88,7 @@ class StructureChecker : Checker {
 class CodeChecker() : Checker {
 
     companion object {
-        val blacklist = object {}.javaClass.getResource("/blacklist.txt").readText().lines().filter{it.isNotEmpty()}
+        val blacklist = javaClass.getResource("/blacklist.txt").readText().lines().filter{it.isNotEmpty()}
     }
 
     override fun check(file: File): CheckResult {
