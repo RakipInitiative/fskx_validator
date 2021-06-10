@@ -116,5 +116,6 @@
         }
 
     </script>
+    <footer><p>v.0.0.7</p></footer>
 </body>
 </html>
