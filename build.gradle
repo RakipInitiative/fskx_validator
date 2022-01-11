@@ -72,8 +72,8 @@ repositories {
         name 'fskml'
         url 'https://maven.pkg.github.com/silebat/fskml'
         credentials {
-            username project.findProperty("github.packages.username").toString() ?: System.getenv("GITHUB_NAME")
-            password project.findProperty("github.packages.password").toString() ?: System.getenv("GITHUB_TOKEN")
+            username project.findProperty("github.packages.username") ?: System.getenv("GITHUB_NAME")
+            password project.findProperty("github.packages.password") ?: System.getenv("GITHUB_TOKEN")
         }
     }
 }
