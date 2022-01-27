@@ -20,7 +20,7 @@ Tomcat started.
 
 The *fskx_validator.properties* is a simple Java properties file with the following keys:
 * `base_url`: Url to application.
-* `context`: Path of the application if deployed under an application container. For example for https://localhost/fskx_validator the context is `fskx_validator`. This can be omitted for local applications not running in a container.
+* `context`: Path of the application if deployed under an application container. For example for https://my-domain/fskx_validator the context is `fskx_validator`. This can be omitted for local applications not running in a container.
 
 Example fskx_validator.properties file:
 ```
